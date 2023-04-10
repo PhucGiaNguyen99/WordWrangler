@@ -1,4 +1,6 @@
 # Functions to manipulate ordered word lists
+import string
+
 
 def remove_duplicates(list1) -> list:
     """
@@ -65,6 +67,7 @@ def merge(list1, list2):
             merge_list.append(list1_copy.pop(0))
         else:
             merge_list.append(list2_copy.pop(0))
+    # combine the merge list and the remaining of list 1 and list 2
     return merge_list + list1_copy + list2_copy
 
 
@@ -76,13 +79,14 @@ def merge_sort(list1):
 
     This function should be recursive.
     """
-
-    # Base case:
+    # Base case: when the size of list 1 is equal to 1
     if len(list1) <= 1:
         return list1
     mid_index = len(list1) // 2
+
     first_half = list1[:mid_index]
     second_half = list1[mid_index:]
+
     sorted_first = merge_sort(first_half)
     sorted_second = merge_sort(second_half)
     result = merge(sorted_first, sorted_second)
@@ -100,7 +104,7 @@ def print_half(large_list):
     print("Second half: ", second_half)
 
 
-def gen_all_strings(word):
+def gen_all_strings(word: string):
     """
     Generate all strings that can be composed from the letters in word
     in any order.
@@ -110,7 +114,26 @@ def gen_all_strings(word):
 
     This function should be recursive.
     """
-    return []
+    result = []
+    # Base case: When the given word is with size of 1
+    if word == "":
+        return [word]
+
+    first = word[0]
+    rest_word = word[1:]
+    rest_strings = []
+    rest_strings = gen_all_strings(rest_word)
+    for string in rest_strings:
+        if string == "":
+            new_string = first
+            result.append(new_string)
+        else:
+            for idx in range(len(string) + 1):
+                front = string[0:idx]
+                back = string[idx:]
+                new_string = front + first + back
+                result.append(new_string)
+    return result + rest_strings
 
 
 # Function to load words from a file
